@@ -20,16 +20,7 @@ export type RootStackParamList = {
 
 export type OnboardingParamList = {
   Onboarding: undefined;
-  Onboarding01: undefined;
-  Onboarding02: undefined;
-  Onboarding03: undefined;
   Onboarding04: undefined;
-  Onboarding05: undefined;
-  Onboarding06: undefined;
-  Onboarding07: undefined;
-  Onboarding08: undefined;
-  Onboarding09: undefined;
-  Onboarding10: undefined;
 };
 
 export type AuthStackParamList = {

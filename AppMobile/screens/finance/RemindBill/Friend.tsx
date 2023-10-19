@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Avatar } from "@ui-kitten/components";
-
 import { FriendFragment } from "constants/Type";
 
 interface FriendProps {
@@ -12,13 +11,17 @@ interface FriendProps {
 const Friend = ({ item, onPress }: FriendProps) => {
   const { image } = item;
 
+  const avatarSource = (typeof image?.path === "number") 
+                       ? image.path 
+                       : { uri: image?.path?.uri };
+
   return (
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.7}
       onPress={onPress}
     >
-      {!!image?.path && <Avatar source={image?.path} />}
+      {avatarSource && <Avatar source={avatarSource} />}
     </TouchableOpacity>
   );
 };

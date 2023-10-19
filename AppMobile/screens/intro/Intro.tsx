@@ -22,27 +22,8 @@ const Intro = memo(() => {
       onPress: () => navigate("Auth", { screen: "Home" }),
     },
     {
-      children: "Social",
-      onPress: () => navigate("Social", { screen: "Home" }),
-    },
-    {
-      children: "Profile",
-      onPress: () => navigate("Profile", { screen: "Home" }),
-    },
-    {
-      children: "Education",
-      onPress: () => navigate("Education", { screen: "Home" }),
-    },
-    {
-      ads: true,
-    },
-    {
       children: "Finance",
       onPress: () => navigate("Finance", { screen: "Home" }),
-    },
-    {
-      children: "Crypto",
-      onPress: () => navigate("Crypto", { screen: "Home" }),
     },
   ];
 

@@ -17,47 +17,12 @@ const Home = memo(() => {
   const data = React.useMemo(
     () => [
       {
-        children: "Asset",
-        onPress: () => navigate("Asset"),
-      },
-      {
-        children: "Asset Report",
-        onPress: () => navigate("AssetReport"),
-      },
-      {
-        children: "Month Chart",
-        onPress: () => navigate("MonthChart"),
-      },
-      {
-        children: "List Transaction",
-        onPress: () => navigate("ListTransaction"),
-      },
-      {
-        children: "Add Transaction",
-        onPress: () => navigate("AddTransaction"),
-      },
-      {
-        children: "Category Transaction",
-        onPress: () => navigate("CategoryTransaction"),
-      },
-      {
         children: "Transfer",
         onPress: () => navigate("Transfer"),
       },
       {
-        ads: true,
-      },
-      {
-        children: "E Wallet",
-        onPress: () => navigate("EWallet"),
-      },
-      {
         children: "Remind Bill",
         onPress: () => navigate("RemindBill"),
-      },
-      {
-        children: "Portfolio",
-        onPress: () => navigate("Portfolio"),
       },
     ],
     []

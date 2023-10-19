@@ -43,17 +43,7 @@ const Home = memo(() => {
       />
       <Content>
         <View style={styles.content}>
-          <RenderItem title="SignIn01" />
           <RenderItem title="SignIn02" />
-          <RenderItem title="SignInDefi" />
-          <RenderItem title="SignIn04" />
-          <RenderItem title="SignUp01" />
-          <AdMob marginTop={16} />
-          <RenderItem title="SignUp02" />
-          <RenderItem title="ForgotPassword" />
-          <RenderItem title="Verify" />
-          <RenderItem title="Authenticate" />
-          <RenderItem title="CreateNewProfile" />
         </View>
       </Content>
     </Container>

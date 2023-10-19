@@ -3,41 +3,42 @@ import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import useLayout from "hooks/useLayout";
 
 import Text from "components/Text";
-import CurrencyTextBase from "components/CurrencyTextBase";
+import CurrencyText from "components/CurrencyText";
+import {Dimensions} from 'react-native';
+
+
 
 import dayjs from "utils/dayjs";
-import { BillFragment } from "constants/Type";
+import { BillFragment, SendRequestFragment } from "constants/Type";
 
 interface BillProps {
-  item: BillFragment;
+  item: SendRequestFragment;
   onPress?(): void;
 }
+const windowWidth = Dimensions.get('window').width;
 
-const Bill = ({ item, onPress }: BillProps) => {
+
+const SendReq = ({ item, onPress }: BillProps) => {
+  const { category } = item;
   const { width } = useLayout();
-  const { amount, date, category } = item;
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       style={[
-        styles.container,
-        { width: width - 68, backgroundColor: category?.color },
+        styles.button,
+        { width: width * 0.4 },
+        { backgroundColor: category?.color },
       ]}
       onPress={onPress}
     >
       <View style={styles.top}>
         <View style={styles.row}>
-          {!!category?.icon?.path && (
-            <Image source={category?.icon?.path} style={styles.icon} />
-          )}
+          
           <View>
-            <Text category="title4" status="black">
+            <Text category="title2" status="black">
               {category?.name}
             </Text>
-            <CurrencyTextBase category="title3" status="title" marginTop={8} >
-              {amount}
-            </CurrencyTextBase>
           </View>
         </View>
       </View>
@@ -45,7 +46,7 @@ const Bill = ({ item, onPress }: BillProps) => {
   );
 };
 
-export default Bill;
+export default SendReq;
 
 const styles = StyleSheet.create({
   container: {
@@ -63,9 +64,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
   },
-  icon: {
-    width: 32,
-    height: 32,
-    marginRight: 16,
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+    margin: 8,
+    height: 60,
+    width: (windowWidth / 2) - 16 ,
   },
 });

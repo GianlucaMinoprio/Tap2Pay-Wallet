@@ -23,7 +23,7 @@ export interface PersonProps {
 }
 
 export interface ImageFragment {
-  path?: ImageRequireSource;
+  path?: ImageRequireSource | { uri: string };
 }
 
 export interface CategoryFragment {
@@ -73,6 +73,13 @@ export interface AssetFragment {
   type_id?: Category_Types_Enum;
   description?: number;
   point?: string;
+}
+
+export interface SendRequestFragment {
+  id?: string;
+  name?: string;
+  category?: CategoryFragment;
+  type_id?: Category_Types_Enum;
 }
 
 export interface BillFragment {

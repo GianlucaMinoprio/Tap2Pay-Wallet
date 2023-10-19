@@ -42,17 +42,8 @@ const Onbroading = memo(() => {
         title="Onbroading"
       />
       <Content contentContainerStyle={styles.content}>
-        <RenderItem title="Onboarding01" />
-        <RenderItem title="Onboarding02" />
-        <RenderItem title="Onboarding03" />
         <RenderItem title="Onboarding04" />
         <AdMob marginTop={16} />
-        <RenderItem title="Onboarding05" />
-        <RenderItem title="Onboarding06" />
-        <RenderItem title="Onboarding07" />
-        <RenderItem title="Onboarding08" />
-        <RenderItem title="Onboarding09" />
-        <RenderItem title="Onboarding10" />
       </Content>
     </Container>
   );
