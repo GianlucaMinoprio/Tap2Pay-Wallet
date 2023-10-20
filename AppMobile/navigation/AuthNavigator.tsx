@@ -1,6 +1,8 @@
 import React, { memo } from "react";
 import Home from "screens/auth";
-import SignIn02 from "screens/auth/SignIn02";
+import SignUp from "screens/auth/SignUp";
+import SignIn from "screens/auth/SignIn";
+
 import createStackNavigator from "./createStackNavigator";
 
 import { AuthStackParamList } from "./type";
@@ -13,7 +15,8 @@ const AuthNavigator = memo(() => {
       initialRouteName="Home"
     >
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="SignIn02" component={SignIn02} />
+      <Stack.Screen name="SignUp" component={SignUp} />
+      <Stack.Screen name="SignIn" component={SignIn} />
     </Stack.Navigator>
   );
 });

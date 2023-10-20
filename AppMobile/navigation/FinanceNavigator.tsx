@@ -1,8 +1,8 @@
 import React, { memo } from "react";
-import EWalletScreen from "screens/finance/EWallet/EWalletScreen";
 import Home from "screens/finance/Home";
 import RemindBill from "screens/finance/RemindBill/RemindBillScreen";
 import TransferScreen from "screens/finance/Transfer/TransferScreen";
+import TransferScreenOld from "screens/finance/Transfer/TransferScreen";
 import createStackNavigator from "./createStackNavigator";
 
 

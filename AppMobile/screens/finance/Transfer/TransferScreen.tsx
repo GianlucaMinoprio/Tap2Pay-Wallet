@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import {
   useStyleSheet,
   Avatar,
@@ -21,73 +21,57 @@ import NavigationAction from "components/NavigationAction";
 
 import { Images } from "assets/images";
 import { FinanceStackParamList } from "navigation/type";
+import { useState } from 'react';
+
 
 const TransferScreen = memo(() => {
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation<NavigationProp<FinanceStackParamList>>();
 
   const { bottom } = useLayout();
+  const [amount, setAmount] = useState(10);
+
+  const name = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
+  const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${name}`;
+
+
 
   return (
     <Container>
       <TopNavigation
-        title="Transfer money"
+        title="Pay to"
         accessoryLeft={() => <NavigationAction icon="leftArrow" />}
         accessoryRight={() => <NavigationAction />}
       />
       <Content contentContainerStyle={styles.contentContainerStyle}>
         <Avatar
-          source={Images.avatar0}
+          source={{ uri: apiUrl }} 
           //@ts-ignore
           style={styles.avatar}
           size="80"
         />
         <Text category="title4" marginTop={16} center>
-          Francis Dixon
+          Axel Cochepin
         </Text>
         <Text category="footnote" status="snow" marginTop={4} center>
-          francisdixon@company.com
+          {name}
         </Text>
+
         <View style={styles.boxView}>
-          <View style={styles.box}>
-            <Text category="headline" status="white">
-              Total Balance
-            </Text>
-            <CurrencyText
-              category="title3"
-              status="white"
-              children={1485.6}
-              marginTop={4}
-            />
+          
+          <View style={themedStyles.amountContainer}>         
+            
+            <Text marginTop={16} style={themedStyles.amountText}>${amount}</Text>
+          
           </View>
-          <View style={styles.iconView}>
-            <Icon pack="assets" name="upArrow" style={styles.icon} />
-          </View>
+
         </View>
-        <Layout level="2" style={styles.card}>
-          <View style={styles.row}>
-            <Text category="headline">Transfer card</Text>
-            <Text category="headline" uppercase>
-              Visa
-            </Text>
-          </View>
-          <View style={styles.cardNumber}>
-            <Asterisk number={4} />
-            <Asterisk number={4} />
-            <Asterisk number={4} />
-            <Text category="title3">1313</Text>
-          </View>
-        </Layout>
-        <Layout level="2" style={styles.note}>
-          <Text category="body" style={styles.text}>
-            GLWS Bro
-          </Text>
-        </Layout>
+        
       </Content>
-      <Layout style={[styles.bottom, { paddingBottom: bottom + 16 }]}>
+      <Layout style={[styles.bottom, { paddingBottom: bottom + 20 }]}>
         <Button
           activeOpacity={0.7}
-          children="Tranfer $1,485.60"
+          children="Accept"
           onPress={goBack}
         />
       </Layout>
@@ -108,6 +92,8 @@ const themedStyles = StyleService.create({
   },
   boxView: {
     marginTop: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   box: {
     borderRadius: 12,
@@ -169,5 +155,28 @@ const themedStyles = StyleService.create({
     bottom: 0,
     paddingTop: 8,
     paddingHorizontal: 24,
+  },
+  amountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  amountButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    backgroundColor: '#E2E2E2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  amountButtonText: {
+    fontSize: 20,
+    color: 'black',
+  },
+  amountText: {
+    fontSize: 50,
+    marginHorizontal: 40,
+    paddingTop: 30,
+    height: 70,
   },
 });

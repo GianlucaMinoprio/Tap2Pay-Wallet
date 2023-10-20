@@ -28,9 +28,8 @@ export type AuthStackParamList = {
   SignIn01: undefined;
   SignIn02: undefined;
   SignInDefi: undefined;
-  SignIn04: undefined;
-  SignUp01: undefined;
-  SignUp02: undefined;
+  SignUp: undefined;
+  SignIn: undefined;
   ForgotPassword: undefined;
   Verify: undefined;
   Authenticate: undefined;
@@ -129,6 +128,7 @@ export type FinanceStackParamList = {
   AddTransaction: undefined;
   CategoryTransaction: undefined;
   Transfer: undefined;
+  TransferOld: undefined;
   EWallet: undefined;
   RemindBill: undefined;
   Portfolio: undefined;

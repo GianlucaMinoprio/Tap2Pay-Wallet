@@ -17,7 +17,7 @@ import Container from "components/Container";
 import { Images } from "assets/images";
 import HideWithKeyboard from "components/HideWithKeyboard";
 
-const SignIn02 = memo(() => {
+const SignUp = memo(() => {
   const { goBack } = useNavigation();
   const theme = useTheme();
 
@@ -32,59 +32,25 @@ const SignIn02 = memo(() => {
   const styles = useStyleSheet(themedStyles);
   return (
     <Container style={styles.container}>
-      <TopNavigation
-        title={() => (
-          <TouchableOpacity onPress={goBack}>
-            <Image
-              source={Images.logo4}
-              /* @ts-ignore */
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        )}
-      />
       <Content>
-        <Text marginTop={12} category="call-out" center>
-          Welcome back!
+        <Text marginTop={50} category="call-out" center>
+          Welcome
         </Text>
         <Text marginTop={12} category="title2" center>
-          Stephen Riley
-        </Text>
-        <Text marginTop={4} category="body" center status="placeholder">
-          (789) 508-5450
+          Sign Up
         </Text>
         <View style={styles.layout}>
           <Input
             secureTextEntry={hide}
-            placeholder="Your password"
+            placeholder="Your name"
             status="primary"
             style={styles.input}
-            accessoryRight={(props) => (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => setHide(!hide)}
-              >
-                <Icon
-                  {...props}
-                  pack="assets"
-                  name={hide ? "eye" : "eyeHide"}
-                />
-              </TouchableOpacity>
-            )}
+            
           />
-          <Button children="Sign In" onPress={handleSignIn} />
-          <TouchableOpacity style={styles.button} onPress={handleFaceID}>
-            <Icon
-              style={{ tintColor: theme["text-primary-color"] }}
-              pack="assets"
-              name="happyFace"
-            />
-            <Text marginLeft={8} status="primary" category="call-out">
-              Login with FaceID
-            </Text>
-          </TouchableOpacity>
+          <Button children="Sign Up" onPress={handleSignIn} />
+          
           <Image
-            source={Images.scene}
+            source={Images.logo4}
             /* @ts-ignore */
             style={styles.image}
           />
@@ -96,7 +62,7 @@ const SignIn02 = memo(() => {
             <Text category="call-out">Forgot Password?</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSignUp}>
-            <Text category="call-out">SIGN UP!</Text>
+            <Text category="call-out">SIGN IN!</Text>
           </TouchableOpacity>
         </View>
       </HideWithKeyboard>
@@ -104,7 +70,7 @@ const SignIn02 = memo(() => {
   );
 });
 
-export default SignIn02;
+export default SignUp;
 
 const themedStyles = StyleService.create({
   container: {
@@ -124,7 +90,7 @@ const themedStyles = StyleService.create({
   },
   image: {
     alignSelf: "center",
-    marginTop: 40,
+    marginTop: 100,
     marginBottom: 48,
   },
   bottom: {

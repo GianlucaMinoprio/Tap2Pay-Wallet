@@ -11,12 +11,8 @@ import AdMob from "components/AdMob";
 interface ItemProp {
   title:
     | "Home"
-    | "SignIn01"
-    | "SignIn02"
-    | "SignInDefi"
-    | "SignIn04"
-    | "SignUp01"
-    | "SignUp02"
+    | "SignUp"
+    | "SignIn"
     | "ForgotPassword"
     | "Verify"
     | "Authenticate"
@@ -43,7 +39,8 @@ const Home = memo(() => {
       />
       <Content>
         <View style={styles.content}>
-          <RenderItem title="SignIn02" />
+          <RenderItem title="SignUp" />
+          <RenderItem title="SignIn" />
         </View>
       </Content>
     </Container>
