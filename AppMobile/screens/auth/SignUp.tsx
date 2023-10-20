@@ -22,6 +22,7 @@ import { EthersAdapter } from "@safe-global/protocol-kit";
 import dotenv from "dotenv";
 import SafeApiKit from "@safe-global/api-kit";
 import { SafeFactory } from "@safe-global/protocol-kit";
+import { SafeAccountConfig } from "@safe-global/protocol-kit";
 
 dotenv.config();
 
@@ -45,6 +46,18 @@ const safeService = new SafeApiKit({
 
 const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapterOwner });
 
+const safeAccountConfig: SafeAccountConfig = {
+  owners: [await ownerSigner.getAddress()],
+  threshold: 2,
+};
+
+const safeSdkOwner = await safeFactory.deploySafe({ safeAccountConfig });
+
+const safeAddress = await safeSdkOwner.getAddress();
+
+console.log("Your Safe has been deployed:");
+console.log(`https://goerli.etherscan.io/address/${safeAddress}`);
+console.log(`https://app.safe.global/gor:${safeAddress}`);
 // safe
 const SignUp = memo(() => {
   const { goBack } = useNavigation();
