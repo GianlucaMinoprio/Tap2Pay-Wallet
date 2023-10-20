@@ -16,14 +16,44 @@ import Content from "components/Content";
 import Container from "components/Container";
 import { Images } from "assets/images";
 import HideWithKeyboard from "components/HideWithKeyboard";
+// safe
+import { ethers } from "ethers";
+import { EthersAdapter } from "@safe-global/protocol-kit";
+import dotenv from "dotenv";
+import SafeApiKit from "@safe-global/api-kit";
+import { SafeFactory } from "@safe-global/protocol-kit";
 
+dotenv.config();
+
+// https://chainlist.org/?search=goerli&testnets=true
+const RPC_URL = process.env.INFURA_RPC_URL;
+const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+
+// Initialize signers
+const ownerSigner = new ethers.Wallet(process.env.OWNER_PRIVATE_KEY!, provider);
+
+const ethAdapterOwner = new EthersAdapter({
+  ethers,
+  signerOrProvider: ownerSigner,
+});
+
+const txServiceUrl = "https://safe-transaction-goerli.safe.global";
+const safeService = new SafeApiKit({
+  txServiceUrl,
+  ethAdapter: ethAdapterOwner,
+});
+
+const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapterOwner });
+
+// safe
 const SignUp = memo(() => {
   const { goBack } = useNavigation();
   const theme = useTheme();
 
-  const handleSignIn = React.useCallback(() => {goBack()}, []);
+  const handleSignIn = React.useCallback(() => {
+    goBack();
+  }, []);
   const handleFaceID = React.useCallback(() => {}, []);
-  const handleForgotPass = React.useCallback(() => {}, []);
   const handleSignUp = React.useCallback(() => {
     goBack();
   }, []);
@@ -45,10 +75,9 @@ const SignUp = memo(() => {
             placeholder="Your name"
             status="primary"
             style={styles.input}
-            
           />
           <Button children="Sign Up" onPress={handleSignIn} />
-          
+
           <Image
             source={Images.logo4}
             /* @ts-ignore */
@@ -58,9 +87,6 @@ const SignUp = memo(() => {
       </Content>
       <HideWithKeyboard>
         <View style={[styles.bottom]}>
-          <TouchableOpacity onPress={handleForgotPass}>
-            <Text category="call-out">Forgot Password?</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={handleSignUp}>
             <Text category="call-out">SIGN IN!</Text>
           </TouchableOpacity>
