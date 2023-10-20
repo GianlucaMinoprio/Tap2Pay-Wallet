@@ -15,8 +15,14 @@ ggwave_instance = ggwave.init()
 def encode():
     try:
         text = request.form['text']
+
+        # Fetch the parameters from the request or use default values if not provided
+        protocolId = int(request.form.get('protocolId', 5))
+        volume = int(request.form.get('volume', 10))
         print(f"Encoding text: {text}")  # Debug print
-        waveform = ggwave.encode(text, protocolId=5, volume=10)
+        print(f"protocolId: {protocolId}")
+        print(f"volume: {volume}")
+        waveform = ggwave.encode(text, protocolId=protocolId, volume=volume)
         waveform_bytes = bytes(waveform)
         waveform_np = np.frombuffer(waveform_bytes, dtype=np.float32)
         with tempfile.NamedTemporaryFile(suffix='.wav', delete=True) as tmpfile:
