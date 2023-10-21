@@ -8,7 +8,8 @@ BASE_URL = 'http://10.41.170.221:8080/'
 def test_encoding_decoding():
     # Test Encoding
     text = "hello world"
-    response = requests.post(f'{BASE_URL}/encode', data={'text': text})
+    response = requests.post(
+        f'{BASE_URL}/encode', data={'text': text})
     if response.status_code != 200:
         print(f'Encoding failed: {response.text}')
         return

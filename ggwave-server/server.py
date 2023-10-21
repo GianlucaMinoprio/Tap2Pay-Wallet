@@ -4,6 +4,7 @@ import soundfile as sf
 import numpy as np
 import io
 import tempfile
+import base64
 
 app = Flask(__name__)
 
@@ -25,10 +26,16 @@ def encode():
         waveform = ggwave.encode(text, protocolId=protocolId, volume=volume)
         waveform_bytes = bytes(waveform)
         waveform_np = np.frombuffer(waveform_bytes, dtype=np.float32)
+
         with tempfile.NamedTemporaryFile(suffix='.wav', delete=True) as tmpfile:
             sf.write(tmpfile.name, waveform_np, samplerate=48000)
             print(f"Saved encoded audio as '{tmpfile.name}'")  # Debug print
-            return send_file(tmpfile.name, as_attachment=True, cache_timeout=0)
+
+            with open(tmpfile.name, 'rb') as f:
+                encoded_audio = base64.b64encode(f.read()).decode('utf-8')
+
+            return jsonify({"audio": encoded_audio})
+
     except Exception as e:
         return str(e), 500
 
@@ -36,12 +43,17 @@ def encode():
 @app.route('/decode', methods=['POST'])
 def decode():
     try:
-        # Access the uploaded file
-        uploaded_file = request.files['file']
-        print(f"Decoding file: {uploaded_file.filename}")  # Debug print
+        request_data = request.get_json()
+        base64_audio = request_data.get('file')
+        if not base64_audio:
+            return "No file provided", 400
 
-        # Create an in-memory binary stream from the uploaded file
-        file_stream = io.BytesIO(uploaded_file.read())
+        # Decode the base64 string
+        audio_data = base64.b64decode(base64_audio)
+
+        # Create an in-memory binary stream from the audio data
+        file_stream = io.BytesIO(audio_data)
+        file_stream.seek(0)  # Reset the stream cursor to the start
 
         decoded_text = decode_wav_file(file_stream, ggwave_instance)
 
