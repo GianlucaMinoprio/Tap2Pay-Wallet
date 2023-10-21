@@ -168,6 +168,7 @@ export const Images = {
   beNice: require("./image_beNice.png"),
   beFly: require("./image_beFly.png"),
   beSmart: require("./image_beSmart.png"),
+  beSmart3: require("./image_beSmart3.png"),
   pizzaLunch: require("./image_pizzaLunch.png"),
   intro01: require("./image_intro01.png"),
   intro02: require("./image_intro02.png"),
@@ -231,4 +232,8 @@ export const Images = {
   ornament: require("./image_ornament.png"),
   success: require("./image_success.png"),
   tripleEllipse: require("./image_triple_ellipse.png"),
+  ob1_nbg: require("./ob1_nbg.png"),
+  ultrasonic_nbg: require("./ultrasonic_nbg.png"),
+  AA_nbg: require("./AA_nbg.png"),
+  uses_nbg: require("./uses_nbg.png"),
 };

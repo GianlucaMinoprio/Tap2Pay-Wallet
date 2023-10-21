@@ -24,7 +24,7 @@ import { FinanceStackParamList } from "navigation/type";
 import { useState } from 'react';
 
 
-const TransferScreen = memo(() => {
+const Pay = memo(() => {
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation<NavigationProp<FinanceStackParamList>>();
 
@@ -79,7 +79,7 @@ const TransferScreen = memo(() => {
   );
 });
 
-export default TransferScreen;
+export default Pay;
 
 const themedStyles = StyleService.create({
   contentContainerStyle: {

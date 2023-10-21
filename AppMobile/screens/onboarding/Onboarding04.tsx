@@ -8,7 +8,8 @@ import {
   Icon,
   Button,
 } from "@ui-kitten/components";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { AuthStackParamList, RootStackParamList } from "navigation/type";
 
 import Text from "components/Text";
 import Container from "components/Container";
@@ -24,8 +25,9 @@ import Animated, {
 } from "react-native-reanimated";
 import useLayout from "hooks/useLayout";
 
+
 const Onboarding04 = memo(() => {
-  const { goBack } = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { height, width, top, bottom } = useLayout();
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
@@ -35,13 +37,17 @@ const Onboarding04 = memo(() => {
     translationX.value = event.contentOffset.x;
   });
 
+  const handleSkip = () => {
+    navigation.navigate('Auth', { screen: 'SignIn' });
+  }
+
   return (
     <Container style={styles.container} level="4">
       <TopNavigation
         style={styles.topNav}
         accessoryRight={() => (
           <Button
-            onPress={goBack}
+            onPress={handleSkip}
             style={styles.btnNav}
             status="success"
             accessoryRight={() => (
@@ -61,7 +67,7 @@ const Onboarding04 = memo(() => {
             return interpolateColor(
               translationX.value,
               [(index - 1) * width, index * width, (index + 1) * width],
-              ["#4D74A6", "#FFFFFF", "#4D74A6"]
+              ["#4D7", "#FFFFFF", "#4D7"]
             );
           });
           const stepFontSize = useDerivedValue(() => {
@@ -142,6 +148,7 @@ const Onboarding04 = memo(() => {
                 source={i.image}
                 /* @ts-ignore */
                 style={styles.image}
+                resizeMode="contain"  //a voir
               />
               <Animated.View
                 style={[
@@ -164,7 +171,7 @@ const Onboarding04 = memo(() => {
           uppercase
           category="title4"
           center
-          onPress={goBack}
+          onPress={handleSkip}
         >
           skip now
         </Text>
@@ -180,7 +187,7 @@ const themedStyles = StyleService.create({
     flex: 1,
   },
   btnNav: {
-    backgroundColor: "background-basic-color-1",
+    backgroundColor: "color-patrick-blue-100",
     width: 64,
     height: 64,
     borderRadius: 99,
@@ -198,7 +205,9 @@ const themedStyles = StyleService.create({
     paddingRight: 24,
   },
   image: {
-    marginTop: 36,
+    marginTop: 30,
+    width: 300,
+    height: 300,
   },
   number: {
     justifyContent: "flex-end",
@@ -208,7 +217,7 @@ const themedStyles = StyleService.create({
   imageView: {
     flexDirection: "row",
     marginLeft: 40,
-    backgroundColor: "color-primary-100",
+    backgroundColor: "color-primary-200",
     borderTopLeftRadius: 140,
     borderBottomLeftRadius: 140,
     position: "absolute",
@@ -218,30 +227,30 @@ const themedStyles = StyleService.create({
 const PageOnBoarding4 = [
   {
     id: 0,
-    image: Images.donut,
-    title: "Souper Sunday for soup recipes",
+    image: Images.ob1_nbg,
+    title: "Welcome to Tap2Pay",
     description:
-      "Establish your own food awards and share your favourites with your audience",
+      "With our application, paying in digital currency has never been easier.",
   },
   {
     id: 1,
-    image: Images.donut,
-    title: "Souper Sunday for soup recipes",
+    image: Images.ultrasonic_nbg,
+    title: "Ultrasonic technology",
     description:
-      "Establish your own food awards and share your favourites with your audience",
+      "Send and receive money instantly via ultrasound - your microphone is the key!",
   },
   {
     id: 2,
-    image: Images.donut,
-    title: "Souper Sunday for soup recipes",
+    image: Images.AA_nbg,
+    title: "Account Abstraction",
     description:
-      "Establish your own food awards and share your favourites with your audience",
+      "Thanks to AA technology, your transactions are simplified and universal.",
   },
   {
     id: 3,
-    image: Images.donut,
-    title: "Souper Sunday for soup recipes",
+    image: Images.uses_nbg,
+    title: "Multiple uses",
     description:
-      "Establish your own food awards and share your favourites with your audience",
+      "Person-to-person or in-store, make every transaction easier with our solution.",
   },
 ];

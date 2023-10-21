@@ -121,17 +121,11 @@ export type FoodDeliveryStackParamList = {
 
 export type FinanceStackParamList = {
   Home: undefined;
-  Asset: undefined;
-  AssetReport: undefined;
-  MonthChart: undefined;
-  ListTransaction: undefined;
-  AddTransaction: undefined;
-  CategoryTransaction: undefined;
   Transfer: undefined;
   TransferOld: undefined;
-  EWallet: undefined;
+  Pay: undefined;
+  Request: undefined;
   RemindBill: undefined;
-  Portfolio: undefined;
 };
 
 export type EducationStackParamList = {

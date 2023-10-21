@@ -22,10 +22,21 @@ import { FinanceStackParamList } from "navigation/type";
 import { RefreshControl } from "react-native-web-refresh-control";
 import SendReq from "./SendReq";
 
+import { RootStackParamList } from "navigation/type";
+
 const RemindBill = memo(() => {
   const theme = useTheme();
   const { top, bottom, width } = useLayout();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { goBack } = useNavigation<NavigationProp<FinanceStackParamList>>();
+
+  const handlePay = () => {
+    navigation.navigate('Finance', { screen: 'Pay' }); // Navigate to Pay screen when audio file detected
+  }
+
+  const handleRequest = () => {
+    navigation.navigate('Finance', { screen: 'Request' });
+  }
 
   const renderBill = React.useCallback(({ item }) => {
     return <Bill item={item} onPress={goBack} />;
@@ -40,7 +51,7 @@ const RemindBill = memo(() => {
   }, []);
 
   const renderSendReq = React.useCallback(({ item }) => {
-    return <SendReq item={item} onPress={goBack} />;
+    return <SendReq item={item} onPress={handleRequest} />;
   }, []);
 
   const listHeaderComponent = React.useCallback(() => {
