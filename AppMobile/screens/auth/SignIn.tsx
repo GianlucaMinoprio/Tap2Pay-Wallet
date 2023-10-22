@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 import {
   TopNavigation,
@@ -17,6 +17,8 @@ import Container from "components/Container";
 import { Images } from "assets/images";
 import HideWithKeyboard from "components/HideWithKeyboard";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const SignIn = memo(() => {
   const { goBack } = useNavigation();
   const theme = useTheme();
@@ -30,8 +32,24 @@ const SignIn = memo(() => {
 
   const [hide, setHide] = React.useState(false);
   const styles = useStyleSheet(themedStyles);
-  const address = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
-  const name = "Axel Cochepin";
+  // SafeAddress pour Test 2 : 0x62A81a211B75E46C83B3c7B50c14BafCc944F3f8
+  // SafeAddress pour Test 1 : 
+  const address = "0x62A81a211B75E46C83B3c7B50c14BafCc944F3f8"; // Clé Hardcodé pour la demo
+
+  const [SafeName, setName] = useState('');
+  const [safeAddress, setSafeAddress] = useState('');
+  const name = "Axel Cochepin"
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const savedName = await AsyncStorage.getItem('name');
+      const savedSafeAddress = await AsyncStorage.getItem('safeAddress');
+      if (savedName) setName(savedName);
+      if (savedSafeAddress) setSafeAddress(savedSafeAddress);
+    };
+    fetchData();
+  }, []);
+
 
 
   return (
