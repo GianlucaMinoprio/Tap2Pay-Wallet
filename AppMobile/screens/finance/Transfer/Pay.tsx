@@ -24,15 +24,27 @@ import { FinanceStackParamList } from "navigation/type";
 import { useState } from 'react';
 
 
-const Pay = memo(() => {
+import { RouteProp } from "@react-navigation/native";
+
+interface PayProps {
+  route: RouteProp<FinanceStackParamList, "Pay">;
+}
+
+const Pay = memo(({ route }: PayProps) => {
+
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation<NavigationProp<FinanceStackParamList>>();
 
   const { bottom } = useLayout();
-  const [amount, setAmount] = useState(10);
+  //const [amount, setAmount] = useState(10);
 
-  const name = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
-  const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${name}`;
+  //const name = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
+
+  const { decodedText } = route.params;
+  const [address, name, amount, currency] = decodedText.split(',');
+
+  const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${address}`;
+
 
 
 
@@ -51,10 +63,10 @@ const Pay = memo(() => {
           size="80"
         />
         <Text category="title4" marginTop={16} center>
-          Axel Cochepin
+          {name}
         </Text>
         <Text category="footnote" status="snow" marginTop={4} center>
-          {name}
+          {address}
         </Text>
 
         <View style={styles.boxView}>

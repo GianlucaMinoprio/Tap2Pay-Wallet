@@ -33,7 +33,7 @@ const SignIn = memo(() => {
   const [hide, setHide] = React.useState(false);
   const styles = useStyleSheet(themedStyles);
   // SafeAddress pour Test 2 : 0x62A81a211B75E46C83B3c7B50c14BafCc944F3f8
-  // SafeAddress pour Test 1 : 
+  // SafeAddress pour Test 1 : 0x461cB679D33DB911cB50A338860747E353D5E653
   const address = "0x62A81a211B75E46C83B3c7B50c14BafCc944F3f8"; // Clé Hardcodé pour la demo
 
   const [SafeName, setName] = useState('');

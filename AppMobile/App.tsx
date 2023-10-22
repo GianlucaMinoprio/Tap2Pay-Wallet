@@ -14,6 +14,9 @@ import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import AssetIconsPack from "assets/AssetIconsPack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ThemeContext from "./ThemeContext";
+import { LogBox } from "react-native";
+
+LogBox.ignoreAllLogs(true);
 // import { patchFlatListProps } from "react-native-web-refresh-control";
 
 // patchFlatListProps();

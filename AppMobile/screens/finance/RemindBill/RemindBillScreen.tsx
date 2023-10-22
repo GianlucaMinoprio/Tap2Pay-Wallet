@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo , useState, useEffect} from "react";
 import { FlatList, StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import { useTheme, Layout, TopNavigation, Icon } from "@ui-kitten/components";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -24,11 +24,64 @@ import SendReq from "./SendReq";
 
 import { RootStackParamList } from "navigation/type";
 
+import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
+
 const RemindBill = memo(() => {
   const theme = useTheme();
   const { top, bottom, width } = useLayout();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { goBack } = useNavigation<NavigationProp<FinanceStackParamList>>();
+
+  const [textToEncode, setTextToEncode] = useState<string>("");
+  const [soundUri, setSoundUri] = useState<string | null>(null);
+  const [decodedText, setDecodedText] = useState('');
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+
+  const [isRecording, setIsRecording] = useState(false);
+
+  const [hasPermissions, setHasPermissions] = useState(false); // Nouvel état pour suivre les permissions
+  
+  
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+      if (status === 'granted') {
+        setHasPermissions(true);  // Mettre à jour l'état lorsque les permissions sont accordées
+      } else {
+        console.error('Audio recording permission not granted');
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
+  useEffect(() => {
+    if (hasPermissions) {  // Vérifier si les permissions ont été accordées
+      // Démarrer l'enregistrement dès que les permissions sont accordées
+      startRecording();
+
+      // Vérifier toutes les 6 secondes
+      const interval = setInterval(() => {
+        if (isRecording) {
+          stopRecording();
+        }
+      }, 6000);
+
+      return () => {
+        clearInterval(interval);
+        if (recording && isRecording) {
+          stopRecording();
+        }
+      };
+    }
+  }, [hasPermissions, isRecording]);  // Ajoutez hasPermissions comme dépendance
+
+
+
+
 
   const handlePay = () => {
     navigation.navigate('Finance', { screen: 'Pay' }); // Navigate to Pay screen when audio file detected
@@ -53,6 +106,78 @@ const RemindBill = memo(() => {
   const renderSendReq = React.useCallback(({ item }) => {
     return <SendReq item={item} onPress={handleRequest} />;
   }, []);
+
+  const startRecording = async () => {
+    try {
+      console.log('Requesting permissions..');
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+        playThroughEarpieceAndroid: true,  // Set to true to use the earpiece (or false to use the speaker)
+      });
+      console.log('Starting recording..');
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HighQuality);
+      await recording.startAsync();
+      setRecording(recording);
+      setIsRecording(true);
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  };
+
+  const decodeAndNavigate = async () => {
+    await decodeEncodedSound();
+    if (decodedText) {
+      navigation.navigate('Pay', { decodedText: decodedText });
+    } else {
+      startRecording();
+    }
+  };
+
+
+  const stopRecording = async () => {
+    if (!recording) return;
+    console.log('Stopping recording..');
+    await recording?.stopAndUnloadAsync();
+    const uri = recording?.getURI();
+    setSoundUri(uri);
+    console.log('Recording stopped and stored at', uri);
+    setIsRecording(false);
+    await decodeAndNavigate();
+  };
+
+  const decodeEncodedSound = async () => {
+    try {
+      if (!soundUri) {
+        console.error('No sound URI available for decoding.');
+        return;
+      }
+       // Read the audio file into a Base64-encoded string
+       const base64Audio = await FileSystem.readAsStringAsync(soundUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+  
+      // Send the POST request to the decode endpoint
+      const response = await fetch(`http://192.168.1.96:8080/decode`, {
+        method: 'POST',
+        body: JSON.stringify({ file: base64Audio }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to decode audio: ${response.statusText}`);
+      }
+  
+      const result = await response.json();
+      setDecodedText(result.text);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const listHeaderComponent = React.useCallback(() => {
     return (

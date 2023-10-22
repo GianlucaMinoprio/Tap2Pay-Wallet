@@ -2,7 +2,7 @@
 
 while true; do
     # Start your server
-    python server.py
+    python3.9 server.py
     # Sleep for a while before checking again
     sleep 1
 done

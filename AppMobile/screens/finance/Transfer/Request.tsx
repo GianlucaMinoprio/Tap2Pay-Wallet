@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
 import {
   useStyleSheet,
@@ -23,6 +23,10 @@ import { Images } from "assets/images";
 import { FinanceStackParamList } from "navigation/type";
 import { useState } from 'react';
 
+import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
+
 
 const Request = memo(() => {
   const styles = useStyleSheet(themedStyles);
@@ -31,9 +35,87 @@ const Request = memo(() => {
   const { bottom } = useLayout();
   const [amount, setAmount] = useState(10);
 
-  const name = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
-  const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${name}`;
+  const address = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
+  const name = "Axel Cochepin";
+  const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${address}`;
 
+  const currency = "ether";
+
+  useEffect(() => {
+    setTextToEncode(`${address},${name},${amount},${currency}`);
+}, [amount]);
+
+
+  const [textToEncode, setTextToEncode] = useState<string>("");
+
+  useEffect(() => {
+    setTextToEncode(`${address},${name},${amount},${currency}`);
+}, [amount]);
+
+  const [soundUri, setSoundUri] = useState<string | null>(null);
+  const [decodedText, setDecodedText] = useState('');
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+      if (status !== 'granted') {
+        console.error('Audio recording permission not granted');
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
+  const encodeText = async () => {
+    try {
+      const protocolId = '5';
+      const volume = '20';
+      const response = await fetch('http://192.168.1.96:8080/encode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `text=${encodeURIComponent(textToEncode)}&protocolId=${encodeURIComponent(protocolId)}&volume=${encodeURIComponent(volume)}`,
+      });
+      const result = await response.json();
+      const base64Audio = result.audio;
+      const uri = FileSystem.documentDirectory + 'encodedAudioTest.wav';
+      await FileSystem.writeAsStringAsync(uri, base64Audio, { encoding: FileSystem.EncodingType.Base64 });
+      console.log('Text encoded successfully')
+      console.log('The uri is: ', uri);
+      setSoundUri(uri);
+      // const soundObject = new Audio.Sound();
+      // await soundObject.loadAsync({ uri });
+      // setSound(soundObject);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const playEncodedSound = async () => {
+    const soundObject = new Audio.Sound();
+    try {
+      if (soundUri) {
+        // Disable microphone and set the speaker to be used
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          playsInSilentModeIOS: true,
+          playThroughEarpieceAndroid: false,  // Set to false to use the speaker
+        });
+  
+        await soundObject.loadAsync({ uri: soundUri });
+        await soundObject.setVolumeAsync(1.0, 0);
+        console.log('The uri is: ', soundUri);
+        console.log('Playing sound');
+        await soundObject.playAsync();
+      } else {
+        console.log('No sound object is available to play.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 
   return (
@@ -51,10 +133,10 @@ const Request = memo(() => {
           size="80"
         />
         <Text category="title4" marginTop={16} center>
-          Axel Cochepin
+          {name}
         </Text>
         <Text category="footnote" status="snow" marginTop={4} center>
-          {name}
+          {address}
         </Text>
 
         <View style={styles.boxView}>
@@ -65,7 +147,9 @@ const Request = memo(() => {
               <Text style={styles.amountButtonText}>-</Text>
             </TouchableOpacity>       
             
-            <Text marginTop={16} style={themedStyles.amountText}>${amount}</Text>
+            <Text marginTop={16} style={themedStyles.amountText} >
+              ${amount}
+            </Text>
           
             <TouchableOpacity style={styles.amountButton} onPress={() => setAmount(prev => prev + 1)}>
               <Text style={styles.amountButtonText}>+</Text>
@@ -80,7 +164,10 @@ const Request = memo(() => {
         <Button
           activeOpacity={0.7}
           children="Request Payment"
-          onPress={goBack}
+          onPress={async () => {
+            await encodeText();
+            playEncodedSound();
+          }}
         />
       </Layout>
     </Container>
