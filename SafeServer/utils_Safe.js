@@ -32,7 +32,7 @@ const {
     const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapterOwner });
     const safeAccountConfig = {
       owners: addresses,
-      threshold: Math.ceil(addresses.length / 2),
+      threshold: 1,
     };
   
     return await safeFactory.deploySafe({

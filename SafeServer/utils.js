@@ -9,6 +9,7 @@ const getSafe = async (safeAddress, signerOrProvider) => {
         ethers,
         signerOrProvider: signerOrProvider
     });
+    console.log('Safe', Safe);
     return await Safe.create({
         ethAdapter: ethAdapterOwner,
         safeAddress
@@ -20,7 +21,7 @@ const getSafeService = (signerOrProvider) => {
         ethers,
         signerOrProvider: signerOrProvider
     });
-    return new SafeApiKit({txServiceUrl, ethAdapter: ethAdapterOwner});
+    return new SafeApiKit.default({txServiceUrl, ethAdapter: ethAdapterOwner});
 }
 
 module.exports = {

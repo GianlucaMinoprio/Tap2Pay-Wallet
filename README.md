@@ -1,50 +1,53 @@
-# P2P-Wallet
+# Tap2Pay ultrasonic payment
 
-Documentation pour l'Endpoint d'Initialisation de Safe
-Endpoint : /init-safe
-Méthode : POST
-Description : Cet endpoint permet d'initialiser un nouveau Safe sur le testnet Goerli.
-Données d'Entrée :
-Aucune donnée d'entrée n'est requise car la clé privée est récupérée depuis le fichier .env sur le serveur.
+## React Native Ultrasonic Payment App
 
-Données de Sortie :
-safeAddress (string) : L'adresse Ethereum du Safe nouvellement créé.
-Exemple :
-Requête :
-http
-Copy code
-POST /init-safe HTTP/1.1
-Host: localhost:3000
-Réponse :
-json
-Copy code
-{
-    "safeAddress": "0x1234567890abcdef1234567890abcdef12345678"
-}
-Codes de Réponse :
-200 OK : La requête a réussi et un nouveau Safe a été créé.
-500 Internal Server Error : Il y a eu une erreur lors de la création du Safe.
-Utilisation :
-Lancer le serveur :
+Welcome to the Ultrasonic Payment App built with React Native! This application allows users to make payments using ultrasonic sound waves. We utilize the power of Safe for account creation and payment functionalities, and the payments are made using ApeCoin.
 
-Ouvrez votre terminal.
-Naviguez vers le répertoire contenant votre fichier server.js.
-Exécutez la commande : node server.js.
-Vous devriez voir le message Server is running on http://localhost:3000 s'afficher dans le terminal.
-Initialiser un Safe :
+## Features:
 
-Utilisez un outil comme Postman ou curl dans votre terminal pour envoyer une requête POST à l'endpoint /init-safe.
-Exemple avec curl :
+- **Mobile Payments using Ultrasonics:** Seamlessly pay without needing physical contact or scanning QR codes.
+- **Safe Integration:** Safe ensures secure account creation and payment processing.
+- **ApeCoin Transactions:** All transactions are made using the ApeCoin cryptocurrency.
 
-bash
-Copy code
-curl -X POST http://localhost:3000/init-safe
-Vous devriez recevoir une réponse JSON contenant l'adresse Ethereum du Safe nouvellement créé.
+## Getting Started:
 
-Notes :
-Assurez-vous que le compte associé à la clé privée utilisée pour créer le Safe a suffisamment d'Ether sur le testnet Goerli pour couvrir les frais de gaz de déploiement du contrat Safe.
+### Prerequisites:
 
-Pour des raisons de sécurité, il est recommandé de ne pas exposer votre clé privée et de gérer l'authentification et la gestion des clés de manière sécurisée.
-Cela sera changé par la suite.
-La clé privée utilisé est un compte de teste.
+Ensure you have the following installed:
+- Node.js
+- Yarn or npm
+- React Native and the Expo Go app for mobile testing
 
+### Installation:
+
+1. Clone the repository to your local machine.
+2. Navigate to the root directory and run:
+   ```bash
+   yarn install
+   # or
+   npm install
+3. Navigate to the SafeServer directory and run:
+   ```bash
+   yarn install
+   # or
+   npm install
+4. Navigate to the ggwave-server directory and run:
+   ```bash
+   yarn install
+   # or
+   npm install
+
+### Running the App:
+
+1. Start the SafeServer:
+    ```bash
+    cd SafeServer
+    node server.js
+2. Start the ggwave-server:
+    ```bash
+    cd ggwave-server
+    ./run_server.sh
+3. Finally, in the root directory, run:
+    ```bash
+    expo start
