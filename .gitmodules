@@ -1,0 +1,3 @@
+[submodule "ApeCoin/lib/forge-std"]
+	path = ApeCoin/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
