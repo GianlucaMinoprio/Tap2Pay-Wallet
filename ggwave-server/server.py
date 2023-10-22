@@ -6,6 +6,7 @@ import numpy as np
 import io
 import tempfile
 import base64
+import importlib
 
 app = Flask(__name__)
 
@@ -41,8 +42,17 @@ def encode():
         return str(e), 500
 
 
+def reset_ggwave():
+    global ggwave
+    global ggwave_instance
+    print("Reloading ggwave module")  # Debug print
+    ggwave = importlib.reload(ggwave)
+    ggwave_instance = ggwave.init()
+
+
 @app.route('/decode', methods=['POST'])
 def decode():
+    global ggwave_instance  # Use the global ggwave instance
     try:
         request_data = request.get_json()
         base64_audio = request_data.get('file')
@@ -61,6 +71,8 @@ def decode():
         if decoded_text:
             return jsonify({"text": decoded_text})
         else:
+            # Reset the ggwave instance if decoding failed
+            reset_ggwave()
             return "Failed to decode", 400
     except Exception as e:
         print(f'Error: {e}')  # Debugging line

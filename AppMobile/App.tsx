@@ -51,7 +51,15 @@ const App = () => {
     const soundObject = new Audio.Sound();
     try {
       if (soundUri) {
+        // Disable microphone and set the speaker to be used
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          playsInSilentModeIOS: true,
+          playThroughEarpieceAndroid: false,  // Set to false to use the speaker
+        });
+  
         await soundObject.loadAsync({ uri: soundUri });
+        await soundObject.setVolumeAsync(1.0, 0);
         console.log('The uri is: ', soundUri);
         console.log('Playing sound');
         await soundObject.playAsync();
@@ -62,7 +70,7 @@ const App = () => {
       console.error(error);
     }
   };
-
+  
   const startRecording = async () => {
     try {
       console.log('Requesting permissions..');
@@ -70,6 +78,7 @@ const App = () => {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
+        playThroughEarpieceAndroid: true,  // Set to true to use the earpiece (or false to use the speaker)
       });
       console.log('Starting recording..');
       const recording = new Audio.Recording();
