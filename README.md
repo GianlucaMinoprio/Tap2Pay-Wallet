@@ -22,7 +22,7 @@ Ensure you have the following installed:
 ### Installation:
 
 1. Clone the repository to your local machine.
-2. Navigate to the root directory and run:
+2. Navigate to the AppMobile directory and run:
    ```bash
    yarn install
    # or
@@ -48,6 +48,6 @@ Ensure you have the following installed:
     ```bash
     cd ggwave-server
     ./run_server.sh
-3. Finally, in the root directory, run:
+3. Finally, in the AppMobile directory, run:
     ```bash
     expo start
