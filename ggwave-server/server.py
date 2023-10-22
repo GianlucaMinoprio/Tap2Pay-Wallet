@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_file
+from pydub import AudioSegment
 import ggwave
 import soundfile as sf
 import numpy as np
@@ -67,20 +68,30 @@ def decode():
 
 
 def decode_wav_file(file_stream, ggwave_instance):
-    # Open the WAV file from in-memory binary stream
-    with sf.SoundFile(file_stream, 'r') as f:
-        # Iterate through the file in chunks of 1024 frames
-        for block in f.blocks(blocksize=1024, dtype='float32'):
-            # Convert the chunk to bytes
-            data = block.tobytes()
-            res = ggwave.decode(ggwave_instance, data)
-            if res is not None:
-                try:
-                    decoded_text = res.decode("utf-8")
-                    print('Received text:', decoded_text)
-                    return decoded_text
-                except Exception as e:
-                    print("Decoding error:", e)
+    file_stream.seek(0)  # Reset the stream cursor to the start
+    audio_segment = AudioSegment.from_file(file_stream)
+    audio_segment = audio_segment.set_channels(1)  # Convert to mono
+    audio_segment = audio_segment.set_frame_rate(
+        48000)  # Set frame rate to 48000 Hz
+
+    # Write the converted audio data to a temporary file
+    with tempfile.NamedTemporaryFile(delete=True, suffix=".wav") as tmpfile:
+        audio_segment.export(tmpfile.name, format="wav")
+
+        # Now read and process the WAV file
+        with sf.SoundFile(tmpfile.name, 'r') as f:
+            for block in f.blocks(blocksize=4096, dtype='float32'):
+                data = block.tobytes()
+                print('Received data of length:', len(data))  # Debug print
+                res = ggwave.decode(ggwave_instance, data)
+                print('Received result:', res)
+                if res is not None:
+                    try:
+                        decoded_text = res.decode("utf-8")
+                        print('Received text:', decoded_text)
+                        return decoded_text
+                    except Exception as e:
+                        print("Decoding error:", e)
     return None
 
 
