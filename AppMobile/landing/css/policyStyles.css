@@ -1,0 +1,68 @@
+p,
+a,
+li,
+span {
+  font-family: "Motiva Sans Light", sans-serif;
+}
+
+.logo {
+  width: auto;
+  height: 80;
+}
+.topbar .container-fluid {
+  border-bottom: 1px solid;
+  border-color: #f5f6f7;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+.footer {
+  background-color: #f1f2f3;
+  padding: 32px 0px;
+}
+
+h6,
+h1 {
+  font-family: "Motiva Sans Bold", sans-serif;
+  color: #18216d;
+  font-size: 3.5em;
+  line-height: 1.18;
+  margin: 0.5em 0px;
+  font-weight: 600;
+}
+
+h5 {
+  font-family: "Motiva Sans Bold", sans-serif;
+  color: #2e186a;
+  font-size: 2em;
+  font-weight: 600;
+  margin: 0.5em 0px;
+}
+
+p {
+  color: #18216d;
+  font-size: 21px;
+  line-height: 1.41;
+  margin-bottom: 1em;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  color: #2e186a;
+}
+
+a:hover {
+  color: #18216d;
+}
+
+li {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.policy .p {
+  color: #000000;
+}
+
+.underline {
+  text-decoration: underline;
+}

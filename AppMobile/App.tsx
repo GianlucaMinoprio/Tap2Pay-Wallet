@@ -1,197 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
-import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-const App = () => {
-  const [textToEncode, setTextToEncode] = useState<string>("");
-  const [soundUri, setSoundUri] = useState<string | null>(null);
-  const [decodedText, setDecodedText] = useState('');
-  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+import useCachedResources from "./hooks/useCachedResources";
+import AppContainer from "./navigation/AppContainer";
+import * as eva from "@eva-design/eva";
+import { default as darkTheme } from "constants/theme/dark.json";
+import { default as lightTheme } from "constants/theme/light.json";
+import { default as customTheme } from "constants/theme/appTheme.json";
+import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
+import { default as customMapping } from "./constants/theme/mapping.json";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import AssetIconsPack from "assets/AssetIconsPack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ThemeContext from "./ThemeContext";
+// import { patchFlatListProps } from "react-native-web-refresh-control";
 
-  useEffect(() => {
-    const requestPermissions = async () => {
-      const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-      if (status !== 'granted') {
-        console.error('Audio recording permission not granted');
-      }
-    };
+// patchFlatListProps();
 
-    requestPermissions();
+export default function App() {
+  const [theme, setTheme] = React.useState<"light" | "dark">("dark");
+  React.useEffect(() => {
+    AsyncStorage.getItem("theme").then((value) => {
+      if (value === "light" || value === "dark") setTheme(value);
+    });
   }, []);
-
-  const encodeText = async () => {
-    try {
-      const protocolId = '5';
-      const volume = '20';
-      const response = await fetch('http://192.168.1.32:8080/encode', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `text=${encodeURIComponent(textToEncode)}&protocolId=${encodeURIComponent(protocolId)}&volume=${encodeURIComponent(volume)}`,
-      });
-      const result = await response.json();
-      const base64Audio = result.audio;
-      const uri = FileSystem.documentDirectory + 'encodedAudioTest.wav';
-      await FileSystem.writeAsStringAsync(uri, base64Audio, { encoding: FileSystem.EncodingType.Base64 });
-      console.log('Text encoded successfully')
-      console.log('The uri is: ', uri);
-      setSoundUri(uri);
-      // const soundObject = new Audio.Sound();
-      // await soundObject.loadAsync({ uri });
-      // setSound(soundObject);
-    } catch (error) {
-      console.error(error);
-    }
+  const toggleTheme = () => {
+    const nextTheme = theme === "light" ? "dark" : "light";
+    AsyncStorage.setItem("theme", nextTheme).then(() => {
+      setTheme(nextTheme);
+    });
   };
-
-  const playEncodedSound = async () => {
-    const soundObject = new Audio.Sound();
-    try {
-      if (soundUri) {
-        // Disable microphone and set the speaker to be used
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          playsInSilentModeIOS: true,
-          playThroughEarpieceAndroid: false,  // Set to false to use the speaker
-        });
-  
-        await soundObject.loadAsync({ uri: soundUri });
-        await soundObject.setVolumeAsync(1.0, 0);
-        console.log('The uri is: ', soundUri);
-        console.log('Playing sound');
-        await soundObject.playAsync();
-      } else {
-        console.log('No sound object is available to play.');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-  const startRecording = async () => {
-    try {
-      console.log('Requesting permissions..');
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-        playThroughEarpieceAndroid: true,  // Set to true to use the earpiece (or false to use the speaker)
-      });
-      console.log('Starting recording..');
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HighQuality);
-      await recording.startAsync();
-      setRecording(recording);
-    } catch (err) {
-      console.error('Failed to start recording', err);
-    }
-  };
-
-  const stopRecording = async () => {
-    console.log('Stopping recording..');
-    await recording?.stopAndUnloadAsync();
-    const uri = recording?.getURI();
-    setSoundUri(uri);
-    console.log('Recording stopped and stored at', uri);
-  };
-
-  const decodeEncodedSound = async () => {
-    try {
-      if (!soundUri) {
-        console.error('No sound URI available for decoding.');
-        return;
-      }
-       // Read the audio file into a Base64-encoded string
-       const base64Audio = await FileSystem.readAsStringAsync(soundUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-  
-      // Send the POST request to the decode endpoint
-      const response = await fetch(`http://192.168.1.32:8080/decode`, {
-        method: 'POST',
-        body: JSON.stringify({ file: base64Audio }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to decode audio: ${response.statusText}`);
-      }
-  
-      const result = await response.json();
-      setDecodedText(result.text);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-  const decodeMicrophoneSound = async () => {
-    try {
-      if (!soundUri) {
-        console.error('No sound URI available for decoding.');
-        return;
-      }
-      // Assuming the soundUri state variable holds the URI of the recorded sound
-      const base64Audio = await FileSystem.readAsStringAsync(soundUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-  
-      // Send the POST request to the decode endpoint
-      const response = await fetch(`http://192.168.1.32:8080/decode`, {
-        method: 'POST',
-        body: JSON.stringify({ file: base64Audio }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to decode audio: ${response.statusText}`);
-      }
-  
-      const result = await response.json();
-      setDecodedText(result.text);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="Enter text to encode"
-        value={textToEncode}
-        onChangeText={setTextToEncode}
-        style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 20 }}
-      />
-      <Button title="Encode Text" onPress={encodeText} />
-      <Button title="Play Encoded Sound" onPress={playEncodedSound} />
-      <Button title="Start Recording" onPress={startRecording} />
-      <Button title="Stop Recording" onPress={stopRecording} />
-      <Button title="Decode Encoded Sound" onPress={decodeEncodedSound} />
-      <Button title="Decode Microphone Sound" onPress={decodeMicrophoneSound} />
-      {decodedText && <Text>Decoded Text: {decodedText}</Text>}
-    </View>
-  );
+  const isLoadingComplete = useCachedResources();
+  if (!isLoadingComplete) {
+    return null;
+  } else {
+    return (
+      <SafeAreaProvider>
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+          <IconRegistry icons={[EvaIconsPack, AssetIconsPack]} />
+          <ApplicationProvider
+            {...eva}
+            theme={
+              theme === "light"
+                ? { ...eva.light, ...customTheme, ...lightTheme }
+                : { ...eva.dark, ...customTheme, ...darkTheme }
+            }
+            /* @ts-ignore */
+            customMapping={customMapping}
+          >
+            <SafeAreaProvider>
+              <StatusBar
+                style={theme === "light" ? "dark" : "light"}
+                translucent={true}
+                backgroundColor={"#00000000"}
+              />
+              <AppContainer />
+            </SafeAreaProvider>
+          </ApplicationProvider>
+        </ThemeContext.Provider>
+      </SafeAreaProvider>
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginVertical: 10,
-    padding: 10,
-  },
-});
-
-export default App;
