@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.0"
+    "@uniswap/sdk": "^3.0.3",
+    "ethers": "5.7"
   }
 }
