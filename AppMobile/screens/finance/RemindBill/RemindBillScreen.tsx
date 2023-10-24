@@ -58,6 +58,7 @@ const RemindBill = memo(() => {
     requestPermissions();
   }, []);
 
+  /*
   useEffect(() => {
     if (hasPermissions) {  // Vérifier si les permissions ont été accordées
       // Démarrer l'enregistrement dès que les permissions sont accordées
@@ -68,7 +69,7 @@ const RemindBill = memo(() => {
         if (isRecording) {
           stopRecording();
         }
-      }, 6000);
+      }, 8000);
 
       return () => {
         clearInterval(interval);
@@ -79,7 +80,7 @@ const RemindBill = memo(() => {
     }
   }, [hasPermissions, isRecording]);  // Ajoutez hasPermissions comme dépendance
 
-
+*/
 
 
 
@@ -104,8 +105,17 @@ const RemindBill = memo(() => {
   }, []);
 
   const renderSendReq = React.useCallback(({ item }) => {
-    return <SendReq item={item} onPress={handleRequest} />;
+    const handlePress = () => {
+      if (item.category.name === "Pay") {
+        startRecording();
+      } else if (item.category.name === "Request") {
+        handleRequest();
+      }
+    };
+  
+    return <SendReq item={item} onPress={handlePress} />;
   }, []);
+  
 
   const startRecording = async () => {
     try {
@@ -122,6 +132,14 @@ const RemindBill = memo(() => {
       await recording.startAsync();
       setRecording(recording);
       setIsRecording(true);
+
+      // Arrêter l'enregistrement après 5 secondes
+      setTimeout(() => {
+      if (isRecording) {
+        stopRecording();
+      }
+    }, 5000);  // 5000 milliseconds = 5 seconds
+
     } catch (err) {
       console.error('Failed to start recording', err);
     }
@@ -160,7 +178,7 @@ const RemindBill = memo(() => {
       });
   
       // Send the POST request to the decode endpoint
-      const response = await fetch(`http://192.168.1.96:8080/decode`, {
+      const response = await fetch(`http://10.41.176.73:8080/decode`, {
         method: 'POST',
         body: JSON.stringify({ file: base64Audio }),
         headers: {

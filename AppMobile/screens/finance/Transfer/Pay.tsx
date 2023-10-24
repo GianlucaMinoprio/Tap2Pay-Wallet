@@ -34,6 +34,9 @@ const Pay = memo(({ route }: PayProps) => {
 
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation<NavigationProp<FinanceStackParamList>>();
+  const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
+  const [transactionColor, setTransactionColor] = useState<string>('');
+
 
   const { bottom } = useLayout();
   //const [amount, setAmount] = useState(10);
@@ -44,6 +47,53 @@ const Pay = memo(({ route }: PayProps) => {
   const [address, name, amount, currency] = decodedText.split(',');
 
   const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${address}`;
+
+  const handleAccept = async () => {
+
+    setTransactionColor('white');
+    setTransactionStatus('Transaction en cours');
+
+    const ethAmount = parseFloat(amount) * 0.00055;
+
+    // Define the API endpoint and payload
+    const endpoint = 'http://10.41.176.73:8081/propose-transaction';
+    const payload = {
+      address: address,
+      name: name,
+      amount: ethAmount,
+      currency: 'ETH',
+    };
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        setTransactionStatus('Transaction refusée');
+        setTransactionColor('red');
+        console.error(responseData.error);
+      } else {
+
+        setTransactionStatus('Transaction acceptée');
+        setTransactionColor('green');
+      }
+
+    } catch (error) {
+      console.error('Error calling API:', error);
+    }
+
+    setTimeout(() => {
+      setTransactionStatus(null); // Réinitialisez l'état
+      goBack(); // Naviguer en arrière
+    }, 3000); // Attendre 3 secondes avant de naviguer en arrière
+  };
 
 
 
@@ -81,11 +131,19 @@ const Pay = memo(({ route }: PayProps) => {
         
       </Content>
       <Layout style={[styles.bottom, { paddingBottom: bottom + 20 }]}>
+        
+        {transactionStatus && (
+            <Text style={{ color: transactionColor, textAlign: 'center', marginTop: 20 }}>
+              {transactionStatus}
+            </Text>
+        )}
+
         <Button
           activeOpacity={0.7}
           children="Accept"
-          onPress={goBack}
+          onPress={handleAccept}
         />
+
       </Layout>
     </Container>
   );

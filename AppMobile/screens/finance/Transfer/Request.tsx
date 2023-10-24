@@ -35,7 +35,7 @@ const Request = memo(() => {
   const { bottom } = useLayout();
   const [amount, setAmount] = useState(10);
 
-  const address = "0xbb6fF924Fe33b35eA8B2bE7923eDa2948a9E2c45";
+  const address = "0x62A81a211B75E46C83B3c7B50c14BafCc944F3f8";
   const name = "Axel Cochepin";
   const apiUrl = `https://api.dicebear.com/7.x/bottts-neutral/png?seed=${address}`;
 
@@ -71,7 +71,7 @@ const Request = memo(() => {
     try {
       const protocolId = '5';
       const volume = '20';
-      const response = await fetch('http://192.168.1.96:8080/encode', {
+      const response = await fetch('http://10.41.176.73:8080/encode', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
