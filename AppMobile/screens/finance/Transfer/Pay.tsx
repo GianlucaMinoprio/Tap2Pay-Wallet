@@ -50,18 +50,15 @@ const Pay = memo(({ route }: PayProps) => {
 
   const handleAccept = async () => {
 
-    setTransactionColor('white');
-    setTransactionStatus('Transaction en cours');
+    setTransactionStatus('Transaction in progress.');
 
     const ethAmount = parseFloat(amount) * 0.00055;
 
     // Define the API endpoint and payload
     const endpoint = 'http://10.41.176.73:8081/propose-transaction';
     const payload = {
-      address: address,
-      name: name,
-      amount: ethAmount,
-      currency: 'ETH',
+      destination: address,
+      amount: ethAmount.toString(),
     };
 
     try {
@@ -76,12 +73,12 @@ const Pay = memo(({ route }: PayProps) => {
       const responseData = await response.json();
 
       if (!response.ok) {
-        setTransactionStatus('Transaction refusée');
+        setTransactionStatus('Transaction refused');
         setTransactionColor('red');
         console.error(responseData.error);
       } else {
 
-        setTransactionStatus('Transaction acceptée');
+        setTransactionStatus('Transaction accepted');
         setTransactionColor('green');
       }
 
@@ -133,7 +130,7 @@ const Pay = memo(({ route }: PayProps) => {
       <Layout style={[styles.bottom, { paddingBottom: bottom + 20 }]}>
         
         {transactionStatus && (
-            <Text style={{ color: transactionColor, textAlign: 'center', marginTop: 20 }}>
+            <Text style={{ color: transactionColor, textAlign: 'center', marginTop: 20, marginBottom:80, backgroundColor:'white' }}>
               {transactionStatus}
             </Text>
         )}

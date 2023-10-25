@@ -107,7 +107,7 @@ const RemindBill = memo(() => {
   const renderSendReq = React.useCallback(({ item }) => {
     const handlePress = () => {
       if (item.category.name === "Pay") {
-        startRecording();
+        handlePay2();
       } else if (item.category.name === "Request") {
         handleRequest();
       }
@@ -152,6 +152,10 @@ const RemindBill = memo(() => {
     } else {
       startRecording();
     }
+  };
+
+  const handlePay2 = () => {
+    navigation.navigate('Pay', { decodedText: "0x62A81a211B75E46C83B3c7B50c14BafCc944F3f8,Axel Cochepin,16,ether" });
   };
 
 
